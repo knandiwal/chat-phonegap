@@ -1,0 +1,17 @@
+<div id="chatHall">
+  <div ng-show="joined" id="chatters">
+    <ul>
+      <li ng-repeat="chatter in connectedChatters">
+        <a href="#/chatWith/{{chatter}}"> {{chatter}} </a>
+      </li>
+      <li>
+        Your name is {{ username }}
+      </li>
+    </ul>
+  </div>
+  <div ng-hide="joined">
+    <input type="text" ng-model="username">
+    <input type="button" ng-click="join()" value="Join">
+  </div>
+
+</div>

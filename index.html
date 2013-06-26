@@ -7,15 +7,8 @@
         <link rel="stylesheet" type="text/css" href="css/index.css" />
         <title>Hello World</title>
     </head>
-    <body>
-        <div id="chatHall" ng-app="chat" ng-controller="ChatHallCtrl">
-          <div ng-show="joined" id="chatters">
-            <h1> hello </h1>
-          </div>
-          <div ng-hide="joined">
-            <input type="text" ng-model="username">
-            <input type="button" ng-click="join()" value="Join">
-          </div>
+    <body ng-app="chat">
+        <div ng-view>
         </div>
         <script type="text/javascript" src="js/require.js"></script>
         <script>
@@ -23,6 +16,7 @@
             require(["cordova.js"])
           }
         </script>
+        <script type="text/javascript" src="js/underscore-min.js"></script>
         <script type="text/javascript" src="js/angular.min.js"></script>
         <script type="text/javascript" src="js/chat_hall.js"></script>
     </body>
