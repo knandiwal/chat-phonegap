@@ -17,14 +17,15 @@
   chatModule.service('chatData', function() {
     return {
       currentUser: null,
+      currentSocket: null,
       totalMsgs: [],
       setCurrentUser: function(user) {
         return this.currentUser = user;
       },
       sendMsg: function(msg) {
         var pair;
-        pair = _.find(this.totalMsgs, function(pair) {
-          return pair.partner === msg.receiver;
+        pair = _.find(this.totalMsgs, function(group) {
+          return _.isEqual(group.partner, msg.receiver);
         });
         if (pair) {
           return pair.groupMsgs.push(msg);
@@ -37,7 +38,22 @@
           return this.totalMsgs.push(pair);
         }
       },
-      receiveMsg: function(msg) {}
+      receiveMsg: function(msg) {
+        var pair;
+        pair = _.find(this.totalMsgs, function(group) {
+          return _.isEqual(group.partner, msg.sender);
+        });
+        if (pair) {
+          return pair.groupMsgs.push(msg);
+        } else {
+          pair = {
+            partner: msg.sender,
+            groupMsgs: []
+          };
+          pair.groupMsgs.push(msg);
+          return this.totalMsgs.push(pair);
+        }
+      }
     };
   });
 
@@ -47,7 +63,32 @@
     $scope.connectedChatters.push('Tester');
     $scope.connectedChatters.push('Anny');
     return $scope.join = function() {
-      $scope.joined = true;
+      var socket;
+      socket = io.connect("http://localhost:3333");
+      socket.on('init_chatters', function(chatters) {
+        $scope.connectedChatters = _.reject(chatters, function(cr) {
+          return cr === $scope.username;
+        });
+        $scope.joined = true;
+        return $scope.$apply();
+      });
+      socket.on('chatters', function(chatters) {
+        $scope.connectedChatters = _.reject(chatters, function(cr) {
+          return cr === $scope.username;
+        });
+        return $scope.$apply();
+      });
+      socket.on('receive p2p msg', function(msg) {
+        var e;
+        chatData.receiveMsg(msg);
+        e = angular.element(document.querySelector("#" + msg.receiver.name + "-to-" + msg.sender.name));
+        if (e) {
+          e.scope().getMsgs();
+          return e.scope().$apply();
+        }
+      });
+      socket.emit('join', $scope.username);
+      chatData.currentSocket = socket;
       return chatData.setCurrentUser({
         name: $scope.username
       });
@@ -61,9 +102,10 @@
     $scope.currentUser = chatData.currentUser;
     $scope.getMsgs = function() {
       return $scope.msgs = _.find(chatData.totalMsgs, function(msg) {
-        return msg.partner === $scope.partner;
+        return _.isEqual(msg.partner, $scope.partner);
       });
     };
+    $scope.getMsgs();
     return $scope.send = function() {
       var msg;
       msg = {
@@ -72,7 +114,8 @@
         content: $scope.msgContent
       };
       chatData.sendMsg(msg);
-      return $scope.getMsgs();
+      $scope.getMsgs();
+      return chatData.currentSocket.emit('p2p msg', msg);
     };
   });
 

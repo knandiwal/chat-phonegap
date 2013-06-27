@@ -1,9 +1,11 @@
-<h1> {{currentUser.name }}, you are talking with {{partner.name}} </h3>
+<div id="{{currentUser.name}}-to-{{partner.name}}">
+  <h1> {{currentUser.name }}, you are talking with {{partner.name}} </h3>
 
-<ul>
-  <li ng-repeat="msg in msgs.groupMsgs">
-    {{msg.sender.name}} Said To {{msg.receiver.name}} : {{msg.content}}
-  </li>
-</ul>
-<input type="text" ng-model="msgContent">
-<input type="button" ng-click="send()" value="Send">
+  <ul>
+    <li ng-repeat="msg in msgs.groupMsgs">
+      {{msg.sender.name}} Said To {{msg.receiver.name}} : {{msg.content}}
+    </li>
+  </ul>
+  <input type="text" ng-model="msgContent">
+  <input type="button" ng-click="send()" value="Send">
+</div>
