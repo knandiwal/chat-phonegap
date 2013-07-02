@@ -1,17 +1,24 @@
 <div id="chatHall">
   <div ng-show="joined" id="chatters">
-    <ul>
+    <header class="bar-title">
+      <h1 class="title"> Choose and Talk </h1>
+    </header>
+    <ul class="list" style="margin-top: 5em;">
       <li ng-repeat="chatter in connectedChatters">
-        <a href="#/chatWith/{{chatter}}"> {{chatter}} </a>
-      </li>
-      <li>
-        Your name is {{ username }}
+        <a href="#/chatWith/{{chatter}}"> {{chatter}} <span class="chevron"></span></a>
       </li>
     </ul>
   </div>
   <div ng-hide="joined">
-    <input type="text" ng-model="username">
-    <input type="button" ng-click="join()" value="Join">
-  </div>
+    <header class="bar-title">
+      <h1 class="title"> Join Without Registration </h1>
+    </header>
 
+    <form style="margin-top: 15em; padding-left: 8em; padding-right: 8em">
+      <div class="input-group" >
+        <input type="text" ng-model="username" placeholder="Nick Name" >
+      </div>
+      <a ng-click="join()" class="button-positive button-block"> Join </a>
+    </form>
+  </div>
 </div>

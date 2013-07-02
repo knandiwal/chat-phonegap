@@ -37,12 +37,13 @@ chatModule.controller 'ChatHallCtrl', ($scope, chatData)->
   $scope.joined = false
 
   # for local test
-  $scope.connectedChatters.push('Tester')
-  $scope.connectedChatters.push('Anny')
+  # $scope.connectedChatters.push('Tester')
+  # $scope.connectedChatters.push('Anny')
   # END
 
   $scope.join = ->
-    socket = io.connect("http://localhost:3333")
+    # socket = io.connect("http://localhost:3333")
+    socket = io.connect("http://enigmatic-coast-5545.herokuapp.com")
     socket.on 'init_chatters', (chatters)->
       $scope.connectedChatters = _.reject chatters, (cr)-> cr == $scope.username
       $scope.joined = true

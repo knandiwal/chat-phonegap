@@ -60,11 +60,9 @@
   chatModule.controller('ChatHallCtrl', function($scope, chatData) {
     $scope.connectedChatters = [];
     $scope.joined = false;
-    $scope.connectedChatters.push('Tester');
-    $scope.connectedChatters.push('Anny');
     return $scope.join = function() {
       var socket;
-      socket = io.connect("http://localhost:3333");
+      socket = io.connect("http://enigmatic-coast-5545.herokuapp.com");
       socket.on('init_chatters', function(chatters) {
         $scope.connectedChatters = _.reject(chatters, function(cr) {
           return cr === $scope.username;
